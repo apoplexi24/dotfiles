@@ -38,17 +38,36 @@ alias ll="ls -lah"    # better ls
 
 export HOMEBREW_CASK_OPTS="--appdir=$HOME/Applications"
 
+# wow - a vid player for terminal 
+
 wow() {
+  quality="best"
+  while getopts "q:" opt; do
+    case $opt in
+      q) quality=$OPTARG ;;
+    esac
+  done
+  shift $((OPTIND - 1))
+
   query="$*"
-  url=$(yt-dlp "ytsearch1:${query}" --get-id --skip-download 2>/dev/null | head -n1)
-  if [ -n "$url" ]; then
-    mpv --vo=tct "https://www.youtube.com/watch?v=${url}"
-  else
-    echo "No results found for: $query"
-  fi
+  [ -z "$query" ] && { echo "Usage: wow [-q quality] <search terms>"; return 1; }
+
+  # Fetch top 5 results as "title|||id"
+  choices=$(yt-dlp "ytsearch5:${query}" --get-title --get-id --skip-download 2>/dev/null \
+    | awk 'NR%2{title=$0; next} {print title "|||" $0}')
+
+  # Show full title in fzf (treat whole line as 1 field)
+  choice=$(echo "$choices" | fzf --prompt="Select video: " --with-nth=1..)
+
+  [ -z "$choice" ] && { echo "No selection"; return 1; }
+
+  # Split back into title and id
+  title="${choice%%|||*}"
+  id="${choice##*|||}"
+
+  echo "▶ Playing: $title (quality: $quality)"
+  mpv --vo=tct --ytdl-format="$quality" "https://www.youtube.com/watch?v=$id"
 }
-
-
 
 # Load Angular CLI autocompletion.
 source <(ng completion script)
