@@ -42,6 +42,7 @@ export HOMEBREW_CASK_OPTS="--appdir=$HOME/Applications"
 
 wow() {
   quality="best"
+
   while getopts "q:" opt; do
     case $opt in
       q) quality=$OPTARG ;;
@@ -52,21 +53,36 @@ wow() {
   query="$*"
   [ -z "$query" ] && { echo "Usage: wow [-q quality] <search terms>"; return 1; }
 
-  # Fetch top 5 results as "title|||id"
-  choices=$(yt-dlp "ytsearch5:${query}" --get-title --get-id --skip-download 2>/dev/null \
-    | awk 'NR%2{title=$0; next} {print title "|||" $0}')
+  TMP_THUMBS="${TMP_THUMBS:-$(mktemp -d)}"
 
-  # Show full title in fzf (treat whole line as 1 field)
-  choice=$(echo "$choices" | fzf --prompt="Select video: " --with-nth=1..)
+  # Use ":::" as field separator to avoid conflicts
+  results=$(yt-dlp "ytsearch5:${query}" --skip-download \
+    --print "%(title)s:::%(id)s:::%(thumbnails.-1.url)s" 2>/dev/null)
+
+  [ -z "$results" ] && { echo "No results found"; return 1; }
+
+  choice=$(echo "$results" | fzf --ansi --delimiter=":::" --with-nth=1 \
+    --prompt="Select video: " \
+    --preview '
+      id=$(echo {} | awk -F ":::" "{print \$2}")
+      url=$(echo {} | awk -F ":::" "{print \$3}")
+      fname="'"$TMP_THUMBS"'/$id.jpg"
+
+      if [ -n "$url" ]; then
+        [ ! -f "$fname" ] && curl -s "$url" -o "$fname"
+        chafa --symbols ascii --size 60x20 "$fname" 2>/dev/null || echo "(thumbnail display failed)"
+      else
+        echo "(no thumbnail)"
+      fi
+    ')
 
   [ -z "$choice" ] && { echo "No selection"; return 1; }
 
-  # Split back into title and id
-  title="${choice%%|||*}"
-  id="${choice##*|||}"
+  title=$(echo "$choice" | awk -F ':::' '{print $1}')
+  id=$(echo "$choice" | awk -F ':::' '{print $2}')
 
   echo "▶ Playing: $title (quality: $quality)"
-  mpv --vo=tct --ytdl-format="$quality" "https://www.youtube.com/watch?v=$id"
+  mpv --vo=tct --ytdl-format="$quality" "https://www.youtube.com/watch?v=$id" 2>/dev/null
 }
 
 # Load Angular CLI autocompletion.
