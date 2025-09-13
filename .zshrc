@@ -1,7 +1,7 @@
 # >>> Zsh Config for VS Code-like Terminal <<<
 
 # Path for Homebrew
-export PATH="/opt/homebrew/bin:$PATH"
+export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
 
 # Enable colors
 export CLICOLOR=1
@@ -18,13 +18,13 @@ source $ZSH/oh-my-zsh.sh
 # ----- Plugins installed via Homebrew -----
 
 # zsh-autosuggestions (grey inline suggestions)
-source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+source /home/linuxbrew/.linuxbrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 # zsh-syntax-highlighting (colors for commands)
-source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source /home/linuxbrew/.linuxbrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 # Add extra completions
-fpath+=/opt/homebrew/share/zsh-completions
+fpath+=/home/linuxbrew/.linuxbrew/share/zsh-completions
 
 # Initialize completion system
 autoload -Uz compinit
@@ -84,6 +84,3 @@ wow() {
   echo "▶ Playing: $title (quality: $quality)"
   mpv --vo=tct --ytdl-format="$quality" "https://www.youtube.com/watch?v=$id" 2>/dev/null
 }
-
-# Load Angular CLI autocompletion.
-source <(ng completion script)
