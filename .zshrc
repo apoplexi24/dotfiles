@@ -84,3 +84,6 @@ wow() {
   echo "▶ Playing: $title (quality: $quality)"
   mpv --vo=tct --ytdl-format="$quality" "https://www.youtube.com/watch?v=$id" 2>/dev/null
 }
+
+
+export CGO_ENABLED=1
