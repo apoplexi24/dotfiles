@@ -1,6 +1,6 @@
 # My Personal Zsh Configuration
 
-This repository stores my personal `.zshrc` configuration. The goal is to have a consistent and enhanced Zsh terminal experience across any system I'm working on.
+This repository stores my personal `.zshrc` configuration, to have a consistent and enhanced Zsh terminal experience across any system I'm working on.
 
 ## Features
 
@@ -23,15 +23,22 @@ To use this configuration, you'll need to have [Homebrew](https://brew.sh/) inst
 brew install bat fzf yt-dlp mpv chafa zsh-autosuggestions zsh-syntax-highlighting zsh-completions
 ```
 
+You’ll also need to install [Oh My Zsh](https://ohmyz.sh/) if it’s not already installed:
+
+```bash
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+```
+
 ## Installation
 
-1.  Clone this repository to your local machine.
-2.  Install the prerequisites listed above.
-3.  Symlink the `.zshrc` file from this repository to your home directory:
+1. Clone this repository to your local machine.
+2. Install the prerequisites listed above.
+3. Install **Oh My Zsh** (see above).
+4. Symlink the `.zshrc` file from this repository to your home directory:
     ```bash
     ln -s /path/to/your/clone/.zshrc ~/.zshrc
     ```
-4.  Restart your terminal to apply the changes.
+5. Restart your terminal to apply the changes.
 
 ## Custom `wow` Function
 
@@ -43,8 +50,8 @@ This script provides a way to search for and play YouTube videos directly in you
 wow [-q quality] <search terms>
 ```
 
--   `<search terms>`: The video you want to search for on YouTube.
--   `-q`: (Optional) Set the video quality (e.g., `best`, `720p`, `480p`). Defaults to `best`.
+- `<search terms>`: The video you want to search for on YouTube.
+- `-q`: (Optional) Set the video quality (e.g., `best`, `720p`, `480p`). Defaults to `best`.
 
 ### Example
 
