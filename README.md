@@ -1,6 +1,6 @@
-# My Personal Zsh Configuration
+# My Personal Dotfiles
 
-This repository stores my personal `.zshrc` configuration, to have a consistent and enhanced Zsh terminal experience across any system I'm working on.
+This repository stores my personal dotfile configurations, to have a consistent and enhanced terminal experience.
 
 ## Features
 
